@@ -2,9 +2,23 @@ from flask import Flask, request
 from flask_cors import CORS
 from data import *
 from helperFunctions import *
+from flask_swagger_ui import get_swaggerui_blueprint
+
 app = Flask(__name__)
 CORS(app,support_credentials=True)
 
+### swagger specific ###
+SWAGGER_URL = '/api-docs'
+API_URL = '/static/swagger.json'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "E-comm"
+    }
+)
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+### end swagger specific ###
 @app.route('/health',methods = ["GET"])
 def health_status():
     if(request.method == 'GET'):
@@ -13,7 +27,7 @@ def health_status():
        return 'Oops! something went wrong' 
 
 #api/v1/warehouse/distance?postal_code=465535
-@app.route('/api/v1/warehouse/distance',methods = ["GET"])
+@app.route('/warehouse/distance',methods = ["GET"])
 def warehouse_distance():
     if(request.method == 'GET'):
         postal_code = int(request.args.get('postal_code'))
@@ -27,14 +41,14 @@ def warehouse_distance():
         return {'status':400, 'message':"Wrong Method"}
 
 #/api/v1/product/1
-@app.route('/api/v1/product/<id>',methods = ["GET"])
+@app.route('/product/<id>',methods = ["GET"])
 def get_Product(id):
     if(request.method == 'GET'):
         value = int(id)
         result = searchProduct(products,value);
         print (result)
         if (result == "error") :
-            return {'status':400, 'message':"Invalid product id. Valid product id range is 100 to 110."}
+            return {'status':400, 'message':"Invalid product id. Valid product id range is 100 to 119."}
         else:
             return {'status': 200, 'response': result} 
     else:

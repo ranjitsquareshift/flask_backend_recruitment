@@ -1,0 +1,233 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Squareshift Ecommerce Store",
+    "version": "1.0.0",
+    "title": "Ecommerce API",
+    "license": {
+      "name": "Squareshift",
+      "url": "https://squareshift.co"
+    }
+  },
+
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "required": true,
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "category": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+
+          "description": {
+            "type": "string"
+          },
+          "discount_percentage": {
+            "type": "number"
+          },
+          "weight_in_grams": {
+            "type": "number"
+          }
+        },
+        "example": {
+          "id": 1,
+          "name": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
+          "price": 109.95,
+          "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
+          "category": "men's clothing",
+          "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+          "discount_percentage": 3.2,
+          "weight_in_grams": 670
+        }
+      },
+      "Warehouse": {
+        "type": "object",
+        "properties": {
+          "postal_code": {
+            "type": "number"
+          },
+          "distance_in_kilometers": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Server Health"],
+        "summary": "Returns server state",
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "description": "Health Ok"
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/warehouse/distance": {
+      "get": {
+        "tags": ["Warehouse"],
+        "summary": "Returns distance from warehouse to delivery address",
+        "parameters": [
+          {
+            "name": "postal_code",
+            "in": "query",
+            "description": "Get distance from warehouse to delivery address",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/Warehouse"
+            }
+          },
+          "404": {
+            "description": "Invalid postal code, valid ones are 465535 to 465545.",
+            "schema": {
+              "$ref": "#/components/schemas/Warehouse"
+            }
+          }
+        }
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "get product by id",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/Product"
+            }
+          },
+          "404": {
+            "description": "Invalid product id. Valid product id range is 100 to 119",
+            "schema": {
+              "$ref": "#/components/schemas/Product"
+            }
+          }
+        }
+      }
+    },
+    "/cart/item": {
+      "post": {
+        "tags": ["Cart"],
+        "description": "Need to be implemented",
+        "summary": "Get Cart Item. Need to be implemented",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "NOT FOUND"
+          }
+        }
+      }
+    },
+    "/cart/items": {
+      "get": {
+        "tags": ["Cart"],
+        "description": "Need to be implemented",
+        "summary": "Get all cart items. Need to be implemented",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "NOT FOUND"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "delete": {
+        "tags": ["Cart"],
+        "description": "Need to be implemented",
+        "summary": "Empty cart items. Need to be implemented",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "NOT FOUND"
+          }
+        }
+      }
+    },
+    "/cart/checkout-value": {
+      "get": {
+        "tags": ["Cart"],
+        "description": "Get calculated total amount for all products in cart with shipping charge.",
+        "summary": "Need to be implemented",
+        "parameters": [
+          {
+            "name": "shipping_postal_code",
+            "in": "path",
+            "description": "get calculated shipping cost",
+            "required": true,
+            "type": "number",
+            "schema": {
+              "$ref": "#/components/schemas/Warehouse"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "NOT FOUND"
+          }
+        }
+      }
+    }
+  }
+}
